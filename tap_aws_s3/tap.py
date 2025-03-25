@@ -11,6 +11,7 @@ class TapAwsS3(Tap):
         th.Property("bucket_name", th.StringType, required=True),
         th.Property("aws_access_key_id", th.StringType, required=True),
         th.Property("aws_secret_access_key", th.StringType, required=True),
+        th.Property("region_name", th.StringType, required=True),
         th.Property("prefix", th.StringType, required=False),
         th.Property("start_date", th.StringType, required=False),
     ).to_dict()

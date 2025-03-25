@@ -34,6 +34,10 @@ class S3CSVStream(Stream):
         return self.config["aws_secret_access_key"]
 
     @property
+    def region_name(self) -> str:
+        return self.config["region_name"]
+
+    @property
     def prefix(self) -> str:
         return self.config.get("prefix", "")
 
@@ -61,6 +65,7 @@ class S3CSVStream(Stream):
         s3_client = self._get_s3_client()
         response = s3_client.get_object(Bucket=self.bucket_name, Key=s3_key)
 
+        if s3_key.endswith('.zip'):
             with io.BytesIO(response['Body'].read()) as zip_buffer:
                 with zipfile.ZipFile(zip_buffer, 'r') as z:
                     csv_files = [f for f in z.namelist() if f.endswith('.csv')]
@@ -79,6 +84,7 @@ class S3CSVStream(Stream):
             "s3",
             aws_access_key_id=self.aws_access_key_id,
             aws_secret_access_key=self.aws_secret_access_key,
+            region_name=self.region_name,
             config=s3_config
         )
 
